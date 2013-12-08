@@ -18,15 +18,37 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
      */
     public function prepend(ContainerBuilder $container)
     {
-        $configs = $container->getExtensionConfig($this->getAlias());
-        $parameterBag = $container->getParameterBag();
-        $configs = $parameterBag->resolveValue($configs);
-        $config = $this->processConfiguration(new Configuration(), $configs);
 
         $bundles = $container->getParameter('kernel.bundles');
+        if (isset($bundles['FOSElasticaBundle'])) {
+            $configs = $container->getExtensionConfig($this->getAlias());
+            $parameterBag = $container->getParameterBag();
+            $configs = $parameterBag->resolveValue($configs);
+            $config = $this->processConfiguration(new Configuration(), $configs);
 
-        if (isset($bundles['SonataBlockBundle'])) {
+            $config = array(
+                'index' => array(
+                    'ecommerce' => array(
+                        'types' => array(
+                            'products' => array(
+                                'mappings' => array(
+                                    'name' => null, //array(),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            );
 
+            $container->prependExtensionConfig('fos_elastica', $config);
+
+            /*
+             * glamourrent:
+            client: default
+            :
+                :
+                    mappings:
+             */
         }
     }
 
