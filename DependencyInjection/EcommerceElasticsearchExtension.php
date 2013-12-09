@@ -18,8 +18,8 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
      */
     public function prepend(ContainerBuilder $container)
     {
-
         $bundles = $container->getParameter('kernel.bundles');
+
         if (isset($bundles['FOSElasticaBundle'])) {
             $configs = $container->getExtensionConfig($this->getAlias());
             $parameterBag = $container->getParameterBag();
@@ -27,10 +27,10 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
             $config = $this->processConfiguration(new Configuration(), $configs);
 
             $config = array(
-                'index' => array(
-                    'ecommerce' => array(
+                'indexes' => array(
+                    $config['index'] => array(
                         'types' => array(
-                            'products' => array(
+                            $config['type'] => array(
                                 'mappings' => array(
                                     'name' => null, //array(),
                                 ),
@@ -41,14 +41,6 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
             );
 
             $container->prependExtensionConfig('fos_elastica', $config);
-
-            /*
-             * glamourrent:
-            client: default
-            :
-                :
-                    mappings:
-             */
         }
     }
 
