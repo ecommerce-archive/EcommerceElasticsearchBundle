@@ -4,17 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
     <parameters>
-        <parameter key="ecommerce_elasticsearch.example.class">Ecommerce\Bundle\ElasticsearchBundle\Example</parameter>
+        <parameter key="ecommerce_elasticsearch.service.product_provider.class">Ecommerce\Bundle\ElasticsearchBundle\Service\ProductProvider</parameter>
     </parameters>
 
     <services>
-        <service id="ecommerce_elasticsearch.example" class="%ecommerce_elasticsearch.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="ecommerce_elasticsearch.service.product_provider" class="%ecommerce_elasticsearch.service.product_provider.class%">
+            <argument type="service" id="ecommerce_elasticsearch.elastica.type" />
+            <argument type="service" id="ecommerce_catalog.product_manager" />
+            <tag name="kernel.event_listener" event="ecommerce_catalog.product.post_update" method="postUpdate" />
         </service>
     </services>
-    -->
 </container>

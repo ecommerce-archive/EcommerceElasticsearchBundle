@@ -54,5 +54,12 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (isset($bundles['FOSElasticaBundle'])) {
+            $container->setAlias('ecommerce_elasticsearch.elastica.index', 'fos_elastica.index.'.$config['index']);
+            $container->setAlias('ecommerce_elasticsearch.elastica.type', 'fos_elastica.index.'.$config['index'].'.'.$config['type']);
+        }
     }
 }
