@@ -2,6 +2,8 @@
 
 namespace Ecommerce\Bundle\ElasticsearchBundle\Service;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 use Elastica\Type;
 use Elastica\Document;
 use FOS\ElasticaBundle\Provider\ProviderInterface;
@@ -21,12 +23,22 @@ class ProductProvider implements ProviderInterface
     private $productManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * Constructor.
      */
     public function __construct(Type $productType, ProductManager $productManager)
     {
         $this->productType        = $productType;
         $this->productManager     = $productManager;
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->eventDispatcher = $dispatcher;
     }
 
 
@@ -162,6 +174,17 @@ class ProductProvider implements ProviderInterface
         }
 
         return $filteredData;
+    }
+
+
+
+    private function isValid(Document $document)
+    {
+        if ($document->has('inactive') && $document->has('inactive')) {
+            return false;
+        }
+
+        return true;
     }
 
     public function postUpdate(ProductEvent $event)

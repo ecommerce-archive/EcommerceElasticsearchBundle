@@ -31,6 +31,13 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
                     $config['index'] => array(
                         'types' => array(
                             $config['type'] => array(
+//                                'persistence' => array(
+//                                    'driver' => 'phpcr',
+//                                    'provider' => array(
+//                                        'service' => 'ecommerce_elasticsearch.service.product_provider', //array(),
+//                                    )
+//                                ),
+
                                 'mappings' => array(
                                     'name' => null, //array(),
                                 ),
@@ -60,6 +67,22 @@ class EcommerceElasticsearchExtension extends Extension implements PrependExtens
         if (isset($bundles['FOSElasticaBundle'])) {
             $container->setAlias('ecommerce_elasticsearch.elastica.index', 'fos_elastica.index.'.$config['index']);
             $container->setAlias('ecommerce_elasticsearch.elastica.type', 'fos_elastica.index.'.$config['index'].'.'.$config['type']);
+        }
+
+        $prefix = $this->getAlias();
+
+        $keys = array(
+            'index' => 'index',
+            'type'  => 'type',
+        );
+
+        foreach ($keys as $sourceKey => $targetKey) {
+            if (isset($config[$sourceKey])) {
+                $container->setParameter(
+                    $prefix.'.'.$targetKey,
+                    $config[$sourceKey]
+                );
+            }
         }
     }
 }
